@@ -40,9 +40,7 @@ class MyProject extends Creenv {
   render() {
     this.stats.begin();
 
-    let analysed = this.audio.getAnalysedAudioData(this.deltaT, this.elapsedTime);
-
-    this.renderer.render(this.deltaT, this.elapsedTime);
+    this.renderer.render(this.deltaT, this.elapsedTime, this.audio.getAnalysedAudioData(this.deltaT, this.elapsedTime));
 
     this.stats.end();
   }

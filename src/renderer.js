@@ -2,31 +2,48 @@
 import Canvas from "@creenv/canvas";
 import Vector2 from "@creenv/vector/vector2";
 import Color from "@creenv/color";
+import AudioData from "@creenv/audio/audio-analysed-data"
+
+import * as THREE from "three";
 
 import config from "./config";
 
 
-const BOUNCING_HEIGHT = 150,
-      CUBE_SIZE = new Vector2(250, 250);
 
 class Renderer {
-  init () {
-    this.canvas = new Canvas();
-    this.cubeColor = new Color(255,0,255);
+  constructor () {
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    this.scene = new THREE.Scene();
+
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    this.camera.position.z = 5;
+
+    let cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial({
+        color: 0xff0000
+      })
+    );
+
+    this.scene.add(cube);
+
+    document.body.appendChild(this.renderer.domElement);
   }
 
-  render (deltaT, time) {
-    this.canvas.fillStyle(this.cubeColor.string);
+  init () {
+  }
 
-    this.canvas.background(config.backgroundColor.string);
-
-    let translationY = Math.abs(Math.cos(time/1000)) * BOUNCING_HEIGHT;
-    this.canvas.rect(this.canvas.width/2-CUBE_SIZE.x/2 + config.translation, this.canvas.height/2-CUBE_SIZE.y/2-translationY, CUBE_SIZE.x, CUBE_SIZE.y);
-
-    if (config.drawText) {
-      this.canvas.context.font = "27px Arial";
-      this.canvas.context.fillText(config.text, this.canvas.width/2-CUBE_SIZE.x/2 + config.translation, this.canvas.height/2-CUBE_SIZE.y/2-translationY)
-    }
+  /**
+   * 
+   * @param {number} deltaT 
+   * @param {number} time
+   * @param {AudioData} audio 
+   */
+  render (deltaT, time, audio) {
+    this.renderer.render(this.scene, this.camera);
   }
 }
 
