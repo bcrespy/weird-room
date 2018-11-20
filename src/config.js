@@ -7,7 +7,9 @@ let config = {
   // the range of the distorsion that will be added depending on the energy strength
   distortionRange: 3,
 
-  scale: 0.0
+  scale: 0.0,
+
+  cameraCycle: 30000
 };
 
 
