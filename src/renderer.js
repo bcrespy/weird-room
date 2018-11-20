@@ -55,7 +55,47 @@ class Renderer {
 
     this.scene.add(plane);
 
+    this.setLights();
+
     document.body.appendChild(this.renderer.domElement);
+
+
+
+    // TEST 
+    // https://www.maa.org/sites/default/files/images/upload_library/23/stemkoski/knots/page5.html
+
+    function torus (t, q, p) {
+      return new THREE.Vector3(
+        Math.cos(q*t) * Math.sin(p*t),
+        Math.sin(q*t) * Math.cos(p*t),
+        Math.sin(p*t)
+      );
+    }
+
+    let curvePoints = [];
+
+    for (let i = 0; i < 2*Math.PI; i+= 0.05) {
+      curvePoints.push(torus(i, 3, 7));
+    }
+
+    let curve = new THREE.CatmullRomCurve3(curvePoints);
+    curve.curveType = 'catmullrom';
+    curve.closed = true;
+    
+    let points = curve.getPoints( 50 );
+    let geometry = new THREE.BufferGeometry().setFromPoints( points );
+  
+    var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 3 } );
+
+    // Create the final object to add to the scene
+    let curveObject = new THREE.Line( geometry, material );
+    curveObject.position.setY(7);
+    curveObject.scale.set(5,5,5);
+
+    this.scene.add(curveObject);
+    // END TEST 
+
+
 
     // BINDINGS
     this._handleWindowResize = this._handleWindowResize.bind(this);
@@ -69,6 +109,14 @@ class Renderer {
   init () {
   }
 
+  setLights () {
+    var directionalLight = new THREE.DirectionalLight( 0x00ff00, 1.0 );
+    this.scene.add( directionalLight );
+
+    let l2 = new THREE.AmbientLight(0xffffff, 1.0);
+    this.scene.add(l2);
+  }
+
   /**
    * redimensionne le renderer et change l'aspect de la caméra 
    */
@@ -79,12 +127,8 @@ class Renderer {
   }
 
   addTorus () {
-    let geo = new THREE.TorusKnotBufferGeometry(5, 3, 50, 8);
-    let material = new THREE.MeshBasicMaterial({
-      color: 0xff0000,
-      wireframe: true,
-      wireframeLinewidth: 2.0
-    });
+    let geo = new THREE.TorusKnotBufferGeometry(5, 2, 50, 8);
+    let material = new THREE.MeshNormalMaterial();
     let knot = new THREE.Mesh(geo, material);
     this.scene.add(knot);
   }
