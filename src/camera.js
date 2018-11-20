@@ -7,6 +7,7 @@
 
 import * as THREE from "three";
 import config from "./config";
+const OrbitControls = require('three-orbitcontrols')
 
 
 class Camera {
@@ -15,12 +16,17 @@ class Camera {
    * 
    * @param {THREE.Scene} scene the main scene
    */
-  constructor (scene) {
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  constructor (scene, renderer) {
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 500);
     this.camera.position.z = 5;
     this.camera.position.x = 5;
     this.camera.position.y = 5;
     this.camera.lookAt(0, 0, 0);
+
+    const controls = new OrbitControls(this.camera, renderer.domElement)
+    controls.enableDamping = true
+    controls.dampingFactor = 0.1
+    controls.enableZoom = true;
 
     //Create a closed wavey loop
     this.curve = new THREE.CatmullRomCurve3( [

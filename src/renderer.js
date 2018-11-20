@@ -9,6 +9,7 @@ import * as THREE from "three";
 import config from "./config";
 import GlitchyMaterial from "./shaders/glitchy-material";
 import Camera from "./camera";
+import TorusManager from "./torus-manager";
 
 
 
@@ -22,7 +23,7 @@ class Renderer {
 
     this.scene = new THREE.Scene();
 
-    this.camera = new Camera(this.scene);
+    this.camera = new Camera(this.scene, this.renderer);
 
     let loader = new THREE.TextureLoader();
     let text = loader.load("textures/perfect-grid.png");
@@ -59,51 +60,13 @@ class Renderer {
 
     document.body.appendChild(this.renderer.domElement);
 
-
-
-    // TEST 
-    // https://www.maa.org/sites/default/files/images/upload_library/23/stemkoski/knots/page5.html
-
-    function torus (t, q, p) {
-      return new THREE.Vector3(
-        Math.cos(q*t) * Math.sin(p*t),
-        Math.sin(q*t) * Math.cos(p*t),
-        Math.sin(p*t)
-      );
-    }
-
-    let curvePoints = [];
-
-    for (let i = 0; i < 2*Math.PI; i+= 0.05) {
-      curvePoints.push(torus(i, 3, 7));
-    }
-
-    let curve = new THREE.CatmullRomCurve3(curvePoints);
-    curve.curveType = 'catmullrom';
-    curve.closed = true;
-    
-    let points = curve.getPoints( 50 );
-    let geometry = new THREE.BufferGeometry().setFromPoints( points );
-  
-    var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 3 } );
-
-    // Create the final object to add to the scene
-    let curveObject = new THREE.Line( geometry, material );
-    curveObject.position.setY(7);
-    curveObject.scale.set(5,5,5);
-
-    this.scene.add(curveObject);
-    // END TEST 
-
-
+    this.torusManager = new TorusManager(this.scene);
+    this.torusManager.addTorus();
 
     // BINDINGS
     this._handleWindowResize = this._handleWindowResize.bind(this);
 
     window.addEventListener("resize", this._handleWindowResize);
-    document.addEventListener("click", () => {
-      this.addTorus();
-    })
   }
 
   init () {
@@ -124,13 +87,6 @@ class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.get().aspect = window.innerWidth/window.innerHeight;
     this.camera.get().updateProjectionMatrix();
-  }
-
-  addTorus () {
-    let geo = new THREE.TorusKnotBufferGeometry(5, 2, 50, 8);
-    let material = new THREE.MeshNormalMaterial();
-    let knot = new THREE.Mesh(geo, material);
-    this.scene.add(knot);
   }
 
   /**
@@ -157,7 +113,9 @@ class Renderer {
    */
   render (deltaT, time, audio) {
 
-    this.updateCamera(time);
+    //this.updateCamera(time);
+
+    this.torusManager.update(time, audio);
 
     this.updateUniforms(deltaT, time, audio);
     this.renderer.render(this.scene, this.camera.get());

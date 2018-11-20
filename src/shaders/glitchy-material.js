@@ -5,7 +5,7 @@ export default {
     varying float scale;
 
     void main() {
-      scale = 100.0;
+      scale = 200.0;
       vUv = uv*scale;
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x*scale, position.y*scale, 0.0, 1.0);
@@ -68,7 +68,10 @@ export default {
 
     void main() {
 
-      vec2 pos = vUv+distorsionStrength*noise(vec3((vUv-0.5*scale)*(3.0+cos(iTime/20000.0)*1.5), iTime/20000.0));
+      float unscale = 3.0;
+
+      vec2 uvs = vUv/unscale;
+      vec2 pos = uvs+distorsionStrength*noise(vec3((uvs-0.5*scale/unscale)*(3.0+cos(iTime/20000.0)*1.5), iTime/20000.0));
       
       //float greyscale = 0.0;
 
