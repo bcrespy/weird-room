@@ -8,27 +8,24 @@ let userControls = {
   controls: [
 
     [
-      "i am a folder",
+      "distortion",
 
       {
-        property: "translation", 
-        min: -150, max: 150, step: 20
+        property: "distortionMin", 
+        min: 0, max: 10.0, step: 0.05
       },
 
       {
-        property: "backgroundColor"
-      }
+        property: "distortionRange", 
+        min: 0, max: 10.0, step: 0.05
+      },
     ],
 
-    {
-      property: "drawText"
-    },
-
-    {
-      property: "text"
+    { 
+      property: "scale", 
+      min: 0, max: 10.0, step: 0.1
     }
-
-      ]
+  ]
 
 };
 
