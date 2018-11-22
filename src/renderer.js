@@ -10,6 +10,7 @@ import config from "./config";
 import GlitchyMaterial from "./shaders/glitchy-material";
 import Camera from "./camera";
 import TorusManager from "./torus-manager";
+import ReactiveTube from './reactive-tube';
 
 
 
@@ -62,6 +63,8 @@ class Renderer {
 
     this.torusManager = new TorusManager(this.scene);
     this.torusManager.addTorus();
+
+    this.reactiveTube = new ReactiveTube(this.scene, this.camera);
 
     // BINDINGS
     this._handleWindowResize = this._handleWindowResize.bind(this);
@@ -116,6 +119,7 @@ class Renderer {
     //this.updateCamera(time);
 
     this.torusManager.update(time, audio);
+    this.reactiveTube.update(time, audio);
 
     this.updateUniforms(deltaT, time, audio);
     this.renderer.render(this.scene, this.camera.get());
