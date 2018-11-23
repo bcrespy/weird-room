@@ -116,7 +116,7 @@ class Renderer {
    */
   render (deltaT, time, audio) {
 
-    //this.updateCamera(time);
+   this.updateCamera(time);
 
     this.torusManager.update(time, audio);
     this.reactiveTube.update(time, audio);

@@ -23,18 +23,18 @@ class Camera {
     this.camera.position.y = 5;
     this.camera.lookAt(0, 0, 0);
 
-    const controls = new OrbitControls(this.camera, renderer.domElement)
-    controls.enableDamping = true
-    controls.dampingFactor = 0.1
-    controls.enableZoom = true;
+    //const controls = new OrbitControls(this.camera, renderer.domElement)
+    //controls.enableDamping = true
+    //controls.dampingFactor = 0.1
+    //controls.enableZoom = true;
 
     //Create a closed wavey loop
     this.curve = new THREE.CatmullRomCurve3( [
-			new THREE.Vector3( -8.6, 8.0, -8.6, 0 ),
-			new THREE.Vector3( -8.6, 7.7, 8.6, 0 ),
-			new THREE.Vector3( -8.6, 8.0, 15.6, 0 ),
-			new THREE.Vector3( 8.6, 8.2, 8.6, 0 ),
-      new THREE.Vector3( 8.6, 8.5, -8.6, 0 ),
+			new THREE.Vector3( -60.6, 20.0, -55.6, 0 ),
+			new THREE.Vector3( -60.6, 17.7, 60.6, 0 ),
+			new THREE.Vector3( -60.6, 27.0, 120.6, 0 ),
+			new THREE.Vector3( 60.6, 80.2, 60.6, 0 ),
+      new THREE.Vector3( 60.6, 18.5, -70.6, 0 ),
     ] );
     this.curve.curveType = 'catmullrom';
     this.curve.closed = true;

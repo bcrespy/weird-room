@@ -68,7 +68,7 @@ export default {
 
     void main() {
 
-      float unscale = 3.0;
+      float unscale = 10.0;
 
       vec2 uvs = vUv/unscale;
       vec2 pos = uvs+distorsionStrength*noise(vec3((uvs-0.5*scale/unscale)*(3.0+cos(iTime/20000.0)*1.5), iTime/20000.0));

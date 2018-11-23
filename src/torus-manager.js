@@ -9,6 +9,8 @@ import * as THREE from "three";
 import AudioData from "@creenv/audio/audio-analysed-data";
 import AnimatedTorusKnotBufferGeometry from "./animable-torus-knot";
 
+import config from "./config";
+
 
 const RADIAL = 10;
 const LONGS = 80;
@@ -26,7 +28,7 @@ class TorusManager {
     let radial = RADIAL,
       longs = LONGS;
 
-    let geo = new AnimatedTorusKnotBufferGeometry(10, 3, longs, radial, 2, 4);
+    let geo = new AnimatedTorusKnotBufferGeometry(15, 5, longs, radial, 2, 4);
     let mesh = new THREE.Mesh(geo, this.material);
 
     this.toruses.push({ geo, mesh });
@@ -62,7 +64,7 @@ class TorusManager {
       for (let id of indexes) {
         let v = new THREE.Vector3(positions[id], positions[id + 1], positions[id + 2]);
         let vo = v.clone().sub(o).normalize();
-        v.add(vo.multiplyScalar(0.2 * v.y / torus.geo.maxY)); // compare to Y max
+        v.add(vo.multiplyScalar((config.torusDeform*.2 + 0.8*config.torusDeform*audio.energy/100.0) * v.y / torus.geo.maxY)); // compare to Y max
         positions[id] = v.x;
         positions[id + 1] = v.y;
         positions[id + 2] = v.z;

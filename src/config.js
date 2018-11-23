@@ -9,7 +9,9 @@ let config = {
 
   scale: 0.0,
 
-  cameraCycle: 30000
+  cameraCycle: 60000,
+
+  torusDeform: 1.5
 };
 
 

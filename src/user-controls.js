@@ -24,6 +24,11 @@ let userControls = {
     { 
       property: "scale", 
       min: 0, max: 10.0, step: 0.1
+    },
+
+    {
+      property: "torusDeform",
+      min: 0, max: 5.0, step: 0.0001
     }
   ]
 
