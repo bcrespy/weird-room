@@ -5,6 +5,8 @@ import Color from "@creenv/color";
 import AudioData from "@creenv/audio/audio-analysed-data";
 
 import * as THREE from "three";
+import { EffectComposer, RenderPass, BloomEffect, EffectPass, RealisticBokehEffect,
+  BrightnessContrastEffect, BlendFunction, PixelationEffect, NoiseEffect } from "postprocessing";
 
 import config from "./config";
 import GlitchyMaterial from "./shaders/glitchy-material";
@@ -66,6 +68,20 @@ class Renderer {
 
     this.reactiveTube = new ReactiveTube(this.scene, this.camera);
 
+    // EFFECT COMPOSER 
+    this.composer = new EffectComposer(this.renderer, { depthTexture: true });
+
+    this.bloomEffect = new BloomEffect();
+    this.brightnessEffect = new BrightnessContrastEffect({
+      blendFunction: BlendFunction.SCREEN
+    });
+
+    this.effectPass = new EffectPass(this.camera.get(), this.bloomEffect, this.brightnessEffect);
+    this.effectPass.renderToScreen = true;
+
+    this.composer.addPass(new RenderPass(this.scene, this.camera.get()));
+    this.composer.addPass(this.effectPass);
+
     // BINDINGS
     this._handleWindowResize = this._handleWindowResize.bind(this);
 
@@ -122,7 +138,8 @@ class Renderer {
     this.reactiveTube.update(time, audio);
 
     this.updateUniforms(deltaT, time, audio);
-    this.renderer.render(this.scene, this.camera.get());
+    //this.renderer.render(this.scene, this.camera.get());
+    this.composer.render(deltaT);
   }
 }
 
