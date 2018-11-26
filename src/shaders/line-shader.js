@@ -14,7 +14,7 @@ export default {
 
     void main() {
 
-      gl_FragColor = vec4(gl_FragCoord.x, gl_FragCoord.x, gl_FragCoord.x, 0.4);
+      gl_FragColor = vec4(1.0, 0.0, 1.0, 0.4);
     }
   `
 };

@@ -118,7 +118,7 @@ class Renderer {
 
    this.updateCamera(time);
 
-    this.torusManager.update(time, audio);
+    this.torusManager.update(time, deltaT, audio);
     this.reactiveTube.update(time, audio);
 
     this.updateUniforms(deltaT, time, audio);

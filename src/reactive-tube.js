@@ -46,8 +46,6 @@ class ReactiveTube {
       this.indices[idcsIdx+5] = d;
     }
 
-    console.log(this.indices);
-
     this.geometry.setIndex(this.indices);
 
     this.geometry.addAttribute("position", new THREE.BufferAttribute(this.positions, 3));
@@ -143,8 +141,8 @@ class ReactiveTube {
     let pos = new THREE.Vector3();
     this.camera.get().getWorldDirection(direction);
     this.camera.get().getWorldPosition(pos);
-    this.addPoint(new THREE.Vector3(-pos.x* (0.7 - 0.5*(time/500000)), audio.energy/4, -pos.z* (0.7- 0.5*(time/500000))));
+    this.addPoint(new THREE.Vector3(-pos.x* (0.7 - 0.5*(time/500000)), audio.energy/6.0, -pos.z* (0.7- 0.5*(time/500000))));
   }
-};
+}
 
 export default ReactiveTube;
