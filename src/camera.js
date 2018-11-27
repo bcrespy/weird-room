@@ -62,7 +62,7 @@ class Camera {
    * 
    * @param {number} time absolute time since the beginning, in ms
    */
-  update (time) {
+  update (time, audio) {
     let t = time%config.cameraCycle / config.cameraCycle;
     let t2 = this.curve.getPoint((time+1000) % config.cameraCycle / config.cameraCycle);
     t2.y-= 1.0;
@@ -71,6 +71,9 @@ class Camera {
     let tan = this.curve.getTangent(t);
     this.camera.position.set(pos.x, pos.y, pos.z);
     this.camera.lookAt(t2);
+
+    this.camera.fov = 75 + audio.peak.value * audio.peak.energy/10.0;
+    this.camera.updateProjectionMatrix();
   }
 };
 

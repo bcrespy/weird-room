@@ -6,7 +6,8 @@ import AudioData from "@creenv/audio/audio-analysed-data";
 
 import * as THREE from "three";
 import { EffectComposer, RenderPass, BloomEffect, EffectPass, RealisticBokehEffect,
-  BrightnessContrastEffect, BlendFunction, PixelationEffect, NoiseEffect } from "postprocessing";
+  BrightnessContrastEffect, BlendFunction, PixelationEffect, NoiseEffect,
+  ChromaticAberrationEffect, GlitchMode, GlitchEffect } from "postprocessing";
 
 import config from "./config";
 import GlitchyMaterial from "./shaders/glitchy-material";
@@ -71,12 +72,22 @@ class Renderer {
     // EFFECT COMPOSER 
     this.composer = new EffectComposer(this.renderer, { depthTexture: true });
 
+    const chromaticAberrationEffect = new ChromaticAberrationEffect();
+
+    this.glitchEffect = new GlitchEffect({
+			perturbationMap: loader.load("textures/perturbation-map.jpg"),
+      chromaticAberrationOffset: chromaticAberrationEffect.offset,
+      strength: new Vector2(0., 0.)
+    });
+    
+		const chromaticAberrationPass = new EffectPass(this.camera.get(), chromaticAberrationEffect);
+
     this.bloomEffect = new BloomEffect();
     this.brightnessEffect = new BrightnessContrastEffect({
       blendFunction: BlendFunction.SCREEN
     });
 
-    this.effectPass = new EffectPass(this.camera.get(), this.bloomEffect, this.brightnessEffect);
+    this.effectPass = new EffectPass(this.camera.get(), this.brightnessEffect, this.glitchEffect);
     this.effectPass.renderToScreen = true;
 
     this.composer.addPass(new RenderPass(this.scene, this.camera.get()));
@@ -120,8 +131,11 @@ class Renderer {
     this.material.uniforms["scale"].value = config.scale;
   }
 
-  updateCamera (time) {
-    this.camera.update(time);
+  updatePasses (audio) {
+    this.brightnessEffect.uniforms.get("contrast").value = 0 + audio.energy/16*1.1;
+
+    this.glitchEffect.strength = new Vector2(audio.peak.value, audio.peak.value);
+    this.glitchEffect.uniforms.get("columns").value = audio.peak.value * .0004 * audio.peak.energy;
   }
 
   /**
@@ -132,10 +146,12 @@ class Renderer {
    */
   render (deltaT, time, audio) {
 
-   this.updateCamera(time);
+    this.camera.update(time, audio);
 
     this.torusManager.update(time, deltaT, audio);
     this.reactiveTube.update(time, audio);
+
+    this.updatePasses(audio);
 
     this.updateUniforms(deltaT, time, audio);
     //this.renderer.render(this.scene, this.camera.get());
